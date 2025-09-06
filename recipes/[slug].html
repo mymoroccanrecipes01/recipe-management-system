@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recette - Recettes du Maroc</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .page-header { margin-top: 70px; padding: 40px 0; background: var(--bg-white); }
+        .recipe-detail { padding: 60px 0; }
+        .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+        .recipe-image-large img { width: 100%; height: 400px; object-fit: cover; border-radius: var(--border-radius); }
+        .recipe-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px; }
+        .stat { display: flex; align-items: center; gap: 10px; padding: 15px; background: var(--bg-light); border-radius: var(--border-radius-small); }
+        .ingredients-section, .instructions-section { margin-bottom: 50px; }
+        .ingredients-list ul { list-style: none; }
+        .ingredients-list li { margin-bottom: 10px; }
+        .ingredients-list label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .ingredients-list input { margin: 0; }
+        .instruction-step { display: flex; gap: 20px; margin-bottom: 30px; padding: 20px; background: var(--bg-white); border-radius: var(--border-radius); box-shadow: var(--shadow-light); }
+        .step-number { width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-utensils"></i>
+                <span>Recettes du Maroc</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/" class="nav-link">Accueil</a>
+                <a href="/recipes" class="nav-link active">Recettes</a>
+                <a href="/categories" class="nav-link">Catégories</a>
+                <a href="/search" class="nav-link">Recherche</a>
+                <a href="/admin" class="nav-link">Admin</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="recipe-detail">
+        <div class="container">
+            <div id="recipeContainer">
+                <!-- Chargé dynamiquement -->
+            </div>
+        </div>
+    </section>
+
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>
