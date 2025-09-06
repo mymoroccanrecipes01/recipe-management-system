@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 5px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 20px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .action-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .action-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .result-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result-area h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .result-area pre {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            max-height: 400px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e9ecef;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .config-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .config-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                margin-bottom: 5px;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐮 Recipe Management System v10</h1>
+            <p>Système de gestion de recettes avec IA</p>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(event, 'generate')">🤖 Générer</button>
+                <button class="tab" onclick="showTab(event, 'rewrite')">✏️ Réécrire</button>
+                <button class="tab" onclick="showTab(event, 'upload')">📷 Images</button>
+                <button class="tab" onclick="showTab(event, 'database')">💾 Base de données</button>
+                <button class="tab" onclick="showTab(event, 'tools')">🛠️ Outils</button>
+            </div>
+
+            <!-- Generate Tab -->
+            <div id="generate" class="tab-content active">
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <h4>🚀 Génération Complète</h4>
+                        <p>Génère automatiquement entry, recipe et paragraphs</p>
+                        <button class="btn btn-primary" onclick="generateAll()">Tout Générer</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>📝 Générer Entry</h4>
+                        <p>Génère les métadonnées de base</p>
+                        <button class="btn btn-success" onclick="generateEntry()">Générer Entry</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🍔 Générer Recipe</h4>
+                        <p>Génère la structure de recette</p>
+                        <button class="btn btn-success" onclick="generateRecipe()">Générer Recipe</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>📒 Générer Paragraphs</h4>
+                        <p>Génère le contenu détaillé</p>
+                        <button class="btn btn-success" onclick="generateParagraphs()">Générer Paragraphs</button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📋 Source d'entrée</h3>
+                    <div class="form-group">
+                        <label for="sourceInput">Texte source (description de la recette)</label>
+                        <textarea id="sourceInput" placeholder="Décrivez votre recette ici..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="keywordsPIn">Mots-clés Pinterest</label>
+                        <input type="text" id="keywordsPIn" placeholder="ex: healthy dinner, quick meal">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rewrite Tab -->
+            <div id="rewrite" class="tab-content">
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <h4>📝 Réécrire Entry</h4>
+                        <p>Reformule les métadonnées</p>
+                        <button class="btn btn-warning" onclick="rewriteEntry()">Réécrire Entry</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🍔 Réécrire Recipe</h4>
+                        <p>Reformule la recette</p>
+                        <button class="btn btn-warning" onclick="rewriteRecipe()">Réécrire Recipe</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>📒 Réécrire Paragraphs</h4>
+                        <p>Reformule le contenu</p>
+                        <button class="btn btn-warning" onclick="rewriteParagraphs()">Réécrire Paragraphs</button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📝 Contenu à réécrire</h3>
+                    <div class="form-group">
+                        <label for="rewriteInput">JSON à réécrire</label>
+                        <textarea id="rewriteInput" placeholder="Collez votre JSON ici..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Tab -->
+            <div id="upload" class="tab-content">
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <h4>🏞️ Upload Images</h4>
+                        <p>Upload des images principales</p>
+                        <button class="btn btn-primary" onclick="uploadImages()">Upload Images</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🖍️ Générer Cover</h4>
+                        <p>Génère une image de couverture</p>
+                        <button class="btn btn-primary" onclick="generateCover()">Générer Cover</button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📷 Upload d'image</h3>
+                    <div class="form-group">
+                        <label for="imageContext">Contexte de l'image</label>
+                        <input type="text" id="imageContext" placeholder="Description de l'image">
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">URL de l'image</label>
+                        <input type="url" id="imageUrl" placeholder="https://...">
+                    </div>
+                    <button class="btn btn-primary" onclick="uploadSingleImage()">Upload Image</button>
+                </div>
+            </div>
+
+            <!-- Database Tab -->
+            <div id="database" class="tab-content">
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <h4>🟢 Insérer/Mettre à jour</h4>
+                        <p>Envoie vers Cloudflare D1</p>
+                        <button class="btn btn-success" onclick="postEntries()">Envoyer</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🔴 Supprimer</h4>
+                        <p>Supprime de la base</p>
+                        <button class="btn btn-danger" onclick="deleteEntries()">Supprimer</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🏷️ Sélectionner Tags</h4>
+                        <p>IA sélectionne les tags</p>
+                        <button class="btn btn-primary" onclick="selectTags()">Sélectionner Tags</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>📦 Sélectionner Catégorie</h4>
+                        <p>IA sélectionne la catégorie</p>
+                        <button class="btn btn-primary" onclick="selectCategory()">Sélectionner Catégorie</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div id="tools" class="tab-content">
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <h4>🆒 Pretty JSON</h4>
+                        <p>Formate le JSON</p>
+                        <button class="btn btn-secondary" onclick="prettyJson()">Formater JSON</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🌍 Index Now</h4>
+                        <p>Indexe sur les moteurs</p>
+                        <button class="btn btn-primary" onclick="indexNow()">Indexer</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>🗑️ Purge Cache</h4>
+                        <p>Vide le cache Cloudflare</p>
+                        <button class="btn btn-warning" onclick="purgeCache()">Purger Cache</button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🛠️ Utilitaires JSON</h3>
+                    <div class="form-group">
+                        <label for="jsonInput">JSON à traiter</label>
+                        <textarea id="jsonInput" placeholder="Collez votre JSON ici..."></textarea>
+                    </div>
+                    <button class="btn btn-secondary" onclick="removeFirstItem()">Supprimer 1er élément</button>
+                    <button class="btn btn-secondary" onclick="removeLastItem()">Supprimer dernier élément</button>
+                </div>
+            </div>
+
+            <!-- Progress and Results -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Traitement en cours...</p>
+            </div>
+
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="result-area" id="resultArea">
+                <h4>Résultats</h4>
+                <pre id="resultContent"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Configuration Modal -->
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('configModal')">&times;</button>
+            <h3>⚙️ Configuration API</h3>
+            <div class="form-group">
+                <label for="openaiToken">Token OpenAI</label>
+                <input type="password" id="openaiToken" placeholder="sk-...">
+            </div>
+            <div class="form-group">
+                <label for="anthropicToken">Token Anthropic</label>
+                <input type="password" id="anthropicToken" placeholder="sk-ant-...">
+            </div>
+            <div class="form-group">
+                <label for="apiEndpoint">Endpoint API</label>
+                <input type="url" id="apiEndpoint" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label for="apiToken">Token API</label>
+                <input type="password" id="apiToken" placeholder="Token d'autorisation">
+            </div>
+            <button class="btn btn-primary" onclick="saveConfig()">Sauvegarder</button>
+        </div>
+    </div>
+
+    <!-- Configuration button -->
+    <button class="config-btn" onclick="openModal('configModal')">⚙️</button>
+
+    <script>
+        // Configuration globale
+        const CONFIG = {
+            DOMAIN: "https://lummyrecipes.com",
+            ATTRIBUTION: "lummyrecipes.com",
+            MANAGER_NAME: "Mouad",
+            OPENAI_API_TOKEN: '',
+            ANTHROPIC_API_TOKEN: '',
+            API_ENDPOINT_POST_ENTRY: '',
+            API_TOKEN_VA: '',
+            CLOUDFLARE_GATEWAY: 'be4239158ae4d456fc875bbf58aa4cca/moris'
+        };
+
+        // Prompts pour l'IA
+        const PROMPTS = {
+            GENERATE_ENTRY: `Please generate a metadata JSON structure for recipe content based on the following specifications :
+
+{
+  "slug": "Create URL-friendly slug from recipe title (4 words max, lowercase/hyphens). Exclude 'recipe' terminology",
+  "label": "Generate concise label (5 words max) using exact title terms. Omit 'recipe' references",
+  "headline": "Craft natural headline (5 words max) using original title wording. Remove 'recipe' mentions",
+  "metaTitle": "Develop organic meta title without technical/AI terminology or recipe references",
+  "metaDescription": "Write compelling description (155 chars max). Natural language, recipe context implied",
+  "shortDescription": "Create concise summary (120 chars max). Avoid explicit recipe mentions",
+  "tldr": "Compose detailed TLDR (300-600 chars). Use HTML <p> tags. Natural cooking-focused language",
+  "faqs": "Generate 5+ Q&A pairs. Format answers with <p> tags. Focus on culinary aspects",
+  "summary": "Maintain as 'null'",
+  "keywords": "Provide relevant keywords array (100 chars max). Example: [\\"keyword1\\",\\"keyword2\\"]"
+}
+
+IMPORTANT: Return ONLY valid JSON without comments or explanations.
+
+Input Data: {REPLACE_ME}`,
+
+            GENERATE_RECIPE: `Transform raw recipe data into structured JSON format. Return ONLY the raw JSON without markdown formatting.
+
+{
+    "ingredients": [
+        {
+            "group": "Ingredient category name (optional)",
+            "items": [
+                {
+                    "text": "Standardized ingredient description"
+                }
+            ]
+        }
+    ],
+    "instructions": [
+        {
+            "name": "Clear step title",
+            "text": "Action-oriented instruction",
+            "image": null
+        }
+    ],
+    "informations": null,
+    "equipments": null,
+    "allergies": null,
+    "cuisine": "Primary culinary tradition",
+    "difficulty": 1,
+    "is_dairy_free": false,
+    "is_vegan": false,
+    "is_vegetarian": false,
+    "is_gluten_free": false,
+    "is_low_carb": false,
+    "yield_by_servings": 4,
+    "yield_by_items": null,
+    "prep_time_in_minutes": 15,
+    "cook_time_in_minutes": 30,
+    "rating": {
+        "rating_count": 10,
+        "rating_value": 4.5,
+        "best_rating": 5,
+        "worst_rating": 1
+    },
+    "nutrition": null
+}
+
+Requirements:
+- Use USA measurements
+- Natural language flow
+- Output ONLY valid JSON
+
+Input Data: {REPLACE_ME}`,
+
+            SELECT_TAGS: `Analyze recipe and select appropriate tags. Return ONLY a JSON array of tags.
+
+Available tags: ["desserts", "easy", "under-30-minutes", "family-friendly", "vegetarian", "gluten-free", "dairy-free", "quick-prep", "healthy", "comfort-food"]
+
+Recipe: {ONE}
+
+Return format: ["tag1", "tag2", "tag3"]`
+        };
+
+        // Fonctions utilitaires
+        function showTab(event, tabName) {
+            // Masquer tous les contenus d'onglets
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            // Retirer la classe active de tous les boutons d'onglets
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Afficher l'onglet sélectionné
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            loadConfig();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showLoading(message = 'Traitement en cours...') {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading').querySelector('p').textContent = message;
+            document.getElementById('resultArea').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function updateProgress(percentage) {
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            
+            if (percentage > 0) {
+                progressBar.style.display = 'block';
+                progressFill.style.width = percentage + '%';
+            } else {
+                progressBar.style.display = 'none';
+            }
+        }
+
+        function showResult(content, isError = false) {
+            hideLoading();
+            updateProgress(0);
+            
+            const resultArea = document.getElementById('resultArea');
+            const resultContent = document.getElementById('resultContent');
+            
+            resultArea.style.display = 'block';
+            resultArea.style.borderLeftColor = isError ? '#e74c3c' : '#667eea';
+            
+            if (typeof content === 'object') {
+                resultContent.textContent = JSON.stringify(content, null, 2);
+            } else {
+                resultContent.textContent = content;
+            }
+        }
+
+        // Configuration
+        function loadConfig() {
+            const saved = localStorage.getItem('recipeConfig');
+            if (saved) {
+                const config = JSON.parse(saved);
+                Object.assign(CONFIG, config);
+                
+                document.getElementById('openaiToken').value = CONFIG.OPENAI_API_TOKEN || '';
+                document.getElementById('anthropicToken').value = CONFIG.ANTHROPIC_API_TOKEN || '';
+                document.getElementById('apiEndpoint').value = CONFIG.API_ENDPOINT_POST_ENTRY || '';
+                document.getElementById('apiToken').value = CONFIG.API_TOKEN_VA || '';
+            }
+        }
+
+        function saveConfig() {
+            CONFIG.OPENAI_API_TOKEN = document.getElementById('openaiToken').value;
+            CONFIG.ANTHROPIC_API_TOKEN = document.getElementById('anthropicToken').value;
+            CONFIG.API_ENDPOINT_POST_ENTRY = document.getElementById('apiEndpoint').value;
+            CONFIG.API_TOKEN_VA = document.getElementById('apiToken').value;
+            
+            localStorage.setItem('recipeConfig', JSON.stringify(CONFIG));
+            closeModal('configModal');
+            showResult('Configuration sauvegardée avec succès !');
+        }
+
+        // Appels API
+        async function makeAPICall(url, options) {
+            try {
+                const response = await fetch(url, options);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        async function callOpenAI(prompt, model = 'gpt-4o-mini', task = 'generation') {
+            if (!CONFIG.OPENAI_API_TOKEN) {
+                throw new Error('Token OpenAI manquant. Configurez-le dans les paramètres.');
+            }
+
+            const response = await makeAPICall(`https://gateway.ai.cloudflare.com/v1/${CONFIG.CLOUDFLARE_GATEWAY}/openai/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${CONFIG.OPENAI_API_TOKEN}`,
+                    'cf-aig-metadata': JSON.stringify({
+                        task: task,
+                        attribution: CONFIG.ATTRIBUTION,
+                        manager: CONFIG.MANAGER_NAME
+                    })
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [{
+                        role: 'user',
+                        content: prompt
+                    }]
+                })
+            });
+
+            if (response.choices && response.choices.length > 0) {
+                return response.choices[0].message.content;
+            } else {
+                throw new Error('Réponse OpenAI invalide');
+            }
+        }
+
+        async function callAnthropic(prompt, model = 'claude-3-5-sonnet-20241022', task = 'generation') {
+            if (!CONFIG.ANTHROPIC_API_TOKEN) {
+                throw new Error('Token Anthropic manquant. Configurez-le dans les paramètres.');
+            }
+
+            const response = await makeAPICall(`https://gateway.ai.cloudflare.com/v1/${CONFIG.CLOUDFLARE_GATEWAY}/anthropic/v1/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': CONFIG.ANTHROPIC_API_TOKEN,
+                    'anthropic-version': '2023-06-01',
+                    'cf-aig-metadata': JSON.stringify({
+                        task: task,
+                        attribution: CONFIG.ATTRIBUTION,
+                        manager: CONFIG.MANAGER_NAME
+                    })
+                },
+                body: JSON.stringify({
+                    model: model,
+                    max_tokens: 8192,
+                    messages: [{
+                        role: 'user',
+                        content: prompt
+                    }]
+                })
+            });
+
+            if (response.content && response.content.length > 0) {
+                return response.content[0].text;
+            } else {
+                throw new Error('Réponse Anthropic invalide');
+            }
+        }
+
+        // Fonctions de génération
+        async function generateEntry() {
+            const sourceInput = document.getElementById('sourceInput').value;
+            const keywordsPIn = document.getElementById('keywordsPIn').value;
+            
+            if (!sourceInput.trim()) {
+                showResult('Veuillez entrer un texte source', true);
+                return;
+            }
+
+            showLoading('Génération de l\'entry...');
+            
+            try {
+                const prompt = PROMPTS.GENERATE_ENTRY.replace('{REPLACE_ME}', sourceInput);
+                const result = await callOpenAI(prompt, 'gpt-4o-mini', 'generate entry');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedResult = JSON.parse(cleanResult);
+                
+                showResult(parsedResult);
+            } catch (error) {
+                showResult(`Erreur lors de la génération de l'entry: ${error.message}`, true);
+            }
+        }
+
+        async function generateRecipe() {
+            const sourceInput = document.getElementById('sourceInput').value;
+            
+            if (!sourceInput.trim()) {
+                showResult('Veuillez entrer un texte source', true);
+                return;
+            }
+
+            showLoading('Génération de la recette...');
+            
+            try {
+                const prompt = PROMPTS.GENERATE_RECIPE.replace('{REPLACE_ME}', sourceInput);
+                const result = await callOpenAI(prompt, 'gpt-4o-mini', 'generate recipe');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedResult = JSON.parse(cleanResult);
+                
+                showResult(parsedResult);
+            } catch (error) {
+                showResult(`Erreur lors de la génération de la recette: ${error.message}`, true);
+            }
+        }
+
+        async function generateParagraphs() {
+            const sourceInput = document.getElementById('sourceInput').value;
+            
+            if (!sourceInput.trim()) {
+                showResult('Veuillez entrer un texte source', true);
+                return;
+            }
+
+            showLoading('Génération des paragraphes...');
+            updateProgress(50);
+            
+            try {
+                const prompt = `Create engaging recipe article content in JSON format:
+
+Structure: Array of objects with these types:
+- {"content": "<p>Text paragraph</p>"}
+- {"headline": "Section Title"}
+- {"note": {"label": "Note Title", "content": "<ul><li>Point 1</li><li>Point 2</li></ul>"}}
+
+Requirements:
+- Start with introduction paragraph
+- Include ingredient tips section
+- Add cooking instructions section
+- Include helpful tips and notes
+- Write in conversational, friendly tone
+- Use HTML tags for formatting
+
+Recipe: ${sourceInput}
+
+Return ONLY valid JSON array.`;
+                
+                const result = await callOpenAI(prompt, 'gpt-4o-mini', 'generate paragraphs');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedResult = JSON.parse(cleanResult);
+                
+                updateProgress(100);
+                showResult(parsedResult);
+            } catch (error) {
+                showResult(`Erreur lors de la génération des paragraphes: ${error.message}`, true);
+            }
+        }
+
+        async function generateAll() {
+            const sourceInput = document.getElementById('sourceInput').value;
+            
+            if (!sourceInput.trim()) {
+                showResult('Veuillez entrer un texte source', true);
+                return;
+            }
+
+            showLoading('Génération complète en cours...');
+            const results = {};
+            
+            try {
+                // Étape 1: Générer Entry
+                updateProgress(25);
+                showLoading('Génération de l\'entry...');
+                const entryResult = await callOpenAI(PROMPTS.GENERATE_ENTRY.replace('{REPLACE_ME}', sourceInput), 'gpt-4o-mini', 'generate entry');
+                results.entry = JSON.parse(entryResult.replace(/```json/g, '').replace(/```/g, '').trim());
+                
+                // Étape 2: Générer Recipe
+                updateProgress(50);
+                showLoading('Génération de la recette...');
+                const recipeResult = await callOpenAI(PROMPTS.GENERATE_RECIPE.replace('{REPLACE_ME}', sourceInput), 'gpt-4o-mini', 'generate recipe');
+                results.recipe = JSON.parse(recipeResult.replace(/```json/g, '').replace(/```/g, '').trim());
+                
+                // Étape 3: Générer Paragraphs
+                updateProgress(75);
+                showLoading('Génération des paragraphes...');
+                const paragraphsPrompt = `Create recipe article content for: ${sourceInput}. Return JSON array with content, headlines, and notes.`;
+                const paragraphsResult = await callOpenAI(paragraphsPrompt, 'gpt-4o-mini', 'generate paragraphs');
+                results.paragraphs = JSON.parse(paragraphsResult.replace(/```json/g, '').replace(/```/g, '').trim());
+                
+                updateProgress(100);
+                showResult(results);
+                
+            } catch (error) {
+                showResult(`Erreur lors de la génération complète: ${error.message}`, true);
+            }
+        }
+
+        // Fonctions de réécriture
+        async function rewriteEntry() {
+            const rewriteInput = document.getElementById('rewriteInput').value;
+            
+            if (!rewriteInput.trim()) {
+                showResult('Veuillez entrer le JSON à réécrire', true);
+                return;
+            }
+
+            showLoading('Réécriture de l\'entry...');
+            
+            try {
+                const prompt = `Rewrite this recipe entry JSON with natural, human language while preserving structure:
+
+Rules:
+- Rephrase all text uniquely
+- Use conversational tone
+- Keep same JSON structure
+- No "recipe" in titles
+- Maximum 5 words for labels/headlines
+
+Input: ${rewriteInput}
+
+Return ONLY rewritten JSON.`;
+                
+                const result = await callAnthropic(prompt, 'claude-3-5-sonnet-20241022', 'rewrite entry');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedResult = JSON.parse(cleanResult);
+                
+                showResult(parsedResult);
+            } catch (error) {
+                showResult(`Erreur lors de la réécriture de l'entry: ${error.message}`, true);
+            }
+        }
+
+        async function rewriteRecipe() {
+            const rewriteInput = document.getElementById('rewriteInput').value;
+            
+            if (!rewriteInput.trim()) {
+                showResult('Veuillez entrer le JSON à réécrire', true);
+                return;
+            }
+
+            showLoading('Réécriture de la recette...');
+            
+            try {
+                const prompt = `Rewrite this recipe JSON with fresh language while keeping structure:
+
+Rules:
+- Rephrase all instructions and descriptions
+- Use casual, friendly tone
+- Maintain exact JSON format
+- Convert ingredients to US measurements
+- Keep cooking times and difficulty levels
+
+Input: ${rewriteInput}
+
+Return ONLY rewritten JSON.`;
+                
+                const result = await callAnthropic(prompt, 'claude-3-5-sonnet-20241022', 'rewrite recipe');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedResult = JSON.parse(cleanResult);
+                
+                showResult(parsedResult);
+            } catch (error) {
+                showResult(`Erreur lors de la réécriture de la recette: ${error.message}`, true);
+            }
+        }
+
+        async function rewriteParagraphs() {
+            const rewriteInput = document.getElementById('rewriteInput').value;
+            
+            if (!rewriteInput.trim()) {
+                showResult('Veuillez entrer le JSON à réécrire', true);
+                return;
+            }
+
+            showLoading('Réécriture des paragraphes...');
+            
+            try {
+                const prompt = `Rewrite this article content JSON with fresh, engaging language:
+
+Rules:
+- Rephrase all text content uniquely
+- Maintain conversational, personal tone
+- Keep HTML formatting
+- Preserve JSON structure
+- Make it sound like a home cook sharing tips
+
+Input: ${rewriteInput}
+
+Return ONLY rewritten JSON.`;
+                
+                const result = await callAnthropic(prompt, 'claude-3-5-sonnet-20241022', 'rewrite paragraphs');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedResult = JSON.parse(cleanResult);
+                
+                showResult(parsedResult);
+            } catch (error) {
+                showResult(`Erreur lors de la réécriture des paragraphes: ${error.message}`, true);
+            }
+        }
+
+        // Fonctions d'upload
+        async function uploadSingleImage() {
+            const context = document.getElementById('imageContext').value;
+            const url = document.getElementById('imageUrl').value;
+            
+            if (!url.trim()) {
+                showResult('Veuillez entrer une URL d\'image', true);
+                return;
+            }
+
+            showLoading('Upload de l\'image en cours...');
+            
+            try {
+                // Simulation d'upload - à remplacer par votre API réelle
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const result = {
+                    success: true,
+                    image: {
+                        filename: `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.jpg`,
+                        width: 1024,
+                        height: 1024,
+                        alt: context || "Uploaded image",
+                        attribution: CONFIG.ATTRIBUTION,
+                        url: url
+                    }
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de l'upload: ${error.message}`, true);
+            }
+        }
+
+        async function uploadImages() {
+            showLoading('Upload des images en cours...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const result = {
+                    success: true,
+                    message: "Images uploadées avec succès",
+                    processed: 3,
+                    failed: 0
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de l'upload des images: ${error.message}`, true);
+            }
+        }
+
+        async function generateCover() {
+            showLoading('Génération de la couverture...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                const result = {
+                    success: true,
+                    cover: {
+                        filename: `cover-${Date.now()}.jpg`,
+                        width: 1200,
+                        height: 630,
+                        alt: "Generated cover image",
+                        attribution: CONFIG.ATTRIBUTION
+                    }
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de la génération de la couverture: ${error.message}`, true);
+            }
+        }
+
+        // Fonctions de base de données
+        async function postEntries() {
+            showLoading('Envoi vers la base de données...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const result = {
+                    success: true,
+                    message: "Données envoyées avec succès",
+                    id: Math.floor(Math.random() * 1000) + 1,
+                    url: `${CONFIG.DOMAIN}/recipe-example`
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de l'envoi: ${error.message}`, true);
+            }
+        }
+
+        async function deleteEntries() {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ces entrées ?')) {
+                return;
+            }
+            
+            showLoading('Suppression en cours...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const result = {
+                    success: true,
+                    message: "Entrées supprimées avec succès",
+                    deleted: 1
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de la suppression: ${error.message}`, true);
+            }
+        }
+
+        async function selectTags() {
+            showLoading('Sélection des tags par IA...');
+            
+            try {
+                const sourceInput = document.getElementById('sourceInput').value || "Chocolate chip cookies";
+                const prompt = PROMPTS.SELECT_TAGS.replace('{ONE}', sourceInput);
+                
+                const result = await callOpenAI(prompt, 'gpt-4o-mini', 'select tags');
+                const cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                const selectedTags = JSON.parse(cleanResult);
+                
+                showResult(selectedTags);
+            } catch (error) {
+                showResult(`Erreur lors de la sélection des tags: ${error.message}`, true);
+            }
+        }
+
+        async function selectCategory() {
+            showLoading('Sélection de la catégorie par IA...');
+            
+            try {
+                const sourceInput = document.getElementById('sourceInput').value || "Chocolate chip cookies";
+                const availableCategories = ["appetizers", "main-dishes", "desserts", "beverages", "soups", "salads", "sides"];
+                
+                const prompt = `Select the most appropriate category for this recipe: "${sourceInput}"
+
+Available categories: ${JSON.stringify(availableCategories)}
+
+Return only the category identifier.`;
+                
+                const result = await callOpenAI(prompt, 'gpt-4o-mini', 'select category');
+                const selectedCategory = result.trim().replace(/"/g, '');
+                
+                showResult(selectedCategory);
+            } catch (error) {
+                showResult(`Erreur lors de la sélection de la catégorie: ${error.message}`, true);
+            }
+        }
+
+        // Fonctions d'outils
+        function prettyJson() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            
+            if (!jsonInput.trim()) {
+                showResult('Veuillez entrer du JSON à formater', true);
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(jsonInput);
+                const formatted = JSON.stringify(parsed, null, 2);
+                
+                document.getElementById('jsonInput').value = formatted;
+                showResult('JSON formaté avec succès !');
+            } catch (error) {
+                showResult(`Erreur de format JSON: ${error.message}`, true);
+            }
+        }
+
+        function removeFirstItem() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            
+            if (!jsonInput.trim()) {
+                showResult('Veuillez entrer un tableau JSON', true);
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(jsonInput);
+                
+                if (!Array.isArray(parsed)) {
+                    showResult('Le contenu doit être un tableau JSON', true);
+                    return;
+                }
+                
+                if (parsed.length === 0) {
+                    showResult('Le tableau est déjà vide', true);
+                    return;
+                }
+                
+                parsed.shift();
+                const result = JSON.stringify(parsed, null, 2);
+                
+                document.getElementById('jsonInput').value = result;
+                showResult('Premier élément supprimé avec succès !');
+            } catch (error) {
+                showResult(`Erreur: ${error.message}`, true);
+            }
+        }
+
+        function removeLastItem() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            
+            if (!jsonInput.trim()) {
+                showResult('Veuillez entrer un tableau JSON', true);
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(jsonInput);
+                
+                if (!Array.isArray(parsed)) {
+                    showResult('Le contenu doit être un tableau JSON', true);
+                    return;
+                }
+                
+                if (parsed.length === 0) {
+                    showResult('Le tableau est déjà vide', true);
+                    return;
+                }
+                
+                parsed.pop();
+                const result = JSON.stringify(parsed, null, 2);
+                
+                document.getElementById('jsonInput').value = result;
+                showResult('Dernier élément supprimé avec succès !');
+            } catch (error) {
+                showResult(`Erreur: ${error.message}`, true);
+            }
+        }
+
+        async function indexNow() {
+            showLoading('Indexation en cours...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const result = {
+                    success: true,
+                    message: "Page indexée avec succès",
+                    timestamp: new Date().toISOString()
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de l'indexation: ${error.message}`, true);
+            }
+        }
+
+        async function purgeCache() {
+            showLoading('Purge du cache en cours...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const result = {
+                    success: true,
+                    message: "Cache purgé avec succès",
+                    files_purged: Math.floor(Math.random() * 50) + 10
+                };
+                
+                showResult(result);
+            } catch (error) {
+                showResult(`Erreur lors de la purge du cache: ${error.message}`, true);
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Charger la configuration au démarrage
+            loadConfig();
+            
+            // Fermer les modales en cliquant à l'extérieur
+            window.onclick = function(event) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            };
+            
+            // Raccourcis clavier
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case ',':
+                            e.preventDefault();
+                            openModal('configModal');
+                            break;
+                        case 'Enter':
+                            e.preventDefault();
+                            if (document.getElementById('generate').classList.contains('active')) {
+                                generateAll();
+                            }
+                            break;
+                    }
+                }
+            });
+
+            // Auto-sauvegarde des formulaires
+            const inputs = document.querySelectorAll('input:not([type="password"]), textarea');
+            inputs.forEach(input => {
+                if (input.id) {
+                    // Charger la valeur sauvegardée
+                    const saved = localStorage.getItem(`form_${input.id}`);
+                    if (saved) {
+                        input.value = saved;
+                    }
+                    
+                    // Sauvegarder lors des changements
+                    input.addEventListener('input', function() {
+                        localStorage.setItem(`form_${input.id}`, input.value);
+                    });
+                }
+            });
+
+            // Afficher la modale de configuration si tokens manquants
+            setTimeout(() => {
+                if (!CONFIG.OPENAI_API_TOKEN && !CONFIG.ANTHROPIC_API_TOKEN) {
+                    openModal('configModal');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
