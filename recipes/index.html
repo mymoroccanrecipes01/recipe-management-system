@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toutes les Recettes - Recettes du Maroc</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation (même que index.html) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-utensils"></i>
+                <span>Recettes du Maroc</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/" class="nav-link">Accueil</a>
+                <a href="/recipes" class="nav-link active">Recettes</a>
+                <a href="/categories" class="nav-link">Catégories</a>
+                <a href="/search" class="nav-link">Recherche</a>
+                <a href="/admin" class="nav-link">Admin</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Toutes nos Recettes</h1>
+            <p>Découvrez notre collection complète de recettes marocaines</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Rechercher une recette...">
+                </div>
+                
+                <div class="filters-row">
+                    <select class="filter-select" data-filter="category">
+                        <option value="">Toutes les catégories</option>
+                        <option value="tagines">Tagines</option>
+                        <option value="couscous">Couscous</option>
+                        <option value="patisseries">Pâtisseries</option>
+                        <option value="soupes">Soupes</option>
+                    </select>
+                    
+                    <select class="filter-select" data-filter="difficulty">
+                        <option value="">Toutes difficultés</option>
+                        <option value="facile">Facile</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                    
+                    <select class="filter-select" data-filter="time">
+                        <option value="">Temps de préparation</option>
+                        <option value="15">Moins de 15min</option>
+                        <option value="30">Moins de 30min</option>
+                        <option value="60">Moins d'1h</option>
+                        <option value="120">Plus d'1h</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipes Grid -->
+    <section class="recipes-section">
+        <div class="container">
+            <div class="recipes-grid" id="recipesContainer">
+                <!-- Chargé dynamiquement -->
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Généré dynamiquement -->
+            </div>
+        </div>
+    </section>
+
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>
